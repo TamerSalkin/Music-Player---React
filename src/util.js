@@ -6,7 +6,7 @@ function chillHop() {
       name: "Ocean Patio",
       cover:
         "https://chillhop.com/wp-content/uploads/2020/04/35a95878437b99e3384b023504b89403ae169707-1024x1024.jpg",
-      artist: "Philanthrope, Dayle",
+      artist: "Philantkghrope, Dayle",
       color: ["#982B21", "#B5D5E7"],
       audio: "https://mp3.chillhop.com/serve.php/?mp3=10022",
       id: v4(),
