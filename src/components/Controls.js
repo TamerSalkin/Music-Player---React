@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlay,
@@ -28,12 +28,9 @@ function Controls({
       setIsPlaying(!isPlaying);
     }
   };
-  // useEffect (with this song.active changes after currentSong change without it changes before)
-  // and update would come one step late
-  useEffect(() => {
-    //Change active state
+  const activeLibraryHandler = (songActive) => {
     const newSongs = songs.map((songm) => {
-      if (songm.id === currentSong.id) {
+      if (songm.id === songActive.id) {
         return {
           ...songm,
           active: true,
@@ -46,7 +43,7 @@ function Controls({
       }
     });
     setSongs(newSongs);
-  }, [currentSong]);
+  };
 
   const skipHandler = async (direction) => {
     let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
@@ -54,8 +51,12 @@ function Controls({
       await setCurrentSong(
         songs[(songs.length + currentIndex - 1) % songs.length]
       );
+      activeLibraryHandler(
+        songs[(songs.length + currentIndex - 1) % songs.length]
+      );
     } else if (direction === "forward") {
       await setCurrentSong(songs[(currentIndex + 1) % songs.length]);
+      activeLibraryHandler(songs[(currentIndex + 1) % songs.length]);
     }
     if (isPlaying) {
       audioRef.current.play();
