@@ -16,6 +16,12 @@ h3,
 h4 {
   font-weight: 400;
 }
+.App {
+  transition: all 0.3s ease;
+}
+.library-app-active {
+  margin-left: 30%;
+}
 
 @import "./library";
 @import "./controls";

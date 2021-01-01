@@ -4,6 +4,7 @@ import Library from "./components/Library.js";
 import Music from "./components/Music.js";
 import Controls from "./components/Controls.js";
 import Nav from "./components/Nav.js";
+//Import data
 import data from "./data.js";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
   const [libraryStatus, setLibraryStatus] = useState(false);
   // Ref
   const audioRef = useRef(null);
+  //Event Handlers
   const timeUpdateHandler = (e) => {
     const current = e.target.currentTime;
     const duration = e.target.duration;
@@ -31,8 +33,15 @@ function App() {
       animationPercentage: animationPercentage,
     });
   };
+  const songEndHandler = async () => {
+    let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
+    await setCurrentSong(songs[(currentIndex + 1) % songs.length]);
+    if (isPlaying) {
+      audioRef.current.play();
+    }
+  };
   return (
-    <div className="App">
+    <div className={`App ${libraryStatus ? "library-app-active" : ""}`}>
       <Nav libraryStatus={libraryStatus} setLibraryStatus={setLibraryStatus} />
       <Library
         songs={songs}
@@ -57,6 +66,7 @@ function App() {
       <audio
         onTimeUpdate={timeUpdateHandler}
         onLoadedMetadata={timeUpdateHandler}
+        onEnded={songEndHandler}
         ref={audioRef}
         src={currentSong.audio}
       ></audio>

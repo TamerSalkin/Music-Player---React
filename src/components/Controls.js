@@ -6,7 +6,6 @@ import {
   faAngleRight,
   faPause,
 } from "@fortawesome/free-solid-svg-icons";
-import { playAudio } from "../util.js";
 
 function Controls({
   songInfo,
@@ -29,7 +28,8 @@ function Controls({
       setIsPlaying(!isPlaying);
     }
   };
-  // useEffect
+  // useEffect (with this song.active changes after currentSong change without it changes before)
+  // and update would come one step late
   useEffect(() => {
     //Change active state
     const newSongs = songs.map((songm) => {
@@ -48,14 +48,18 @@ function Controls({
     setSongs(newSongs);
   }, [currentSong]);
 
-  const skipHandler = (direction) => {
+  const skipHandler = async (direction) => {
     let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
     if (direction === "back") {
-      setCurrentSong(songs[(songs.length + currentIndex - 1) % songs.length]);
+      await setCurrentSong(
+        songs[(songs.length + currentIndex - 1) % songs.length]
+      );
     } else if (direction === "forward") {
-      setCurrentSong(songs[(currentIndex + 1) % songs.length]);
+      await setCurrentSong(songs[(currentIndex + 1) % songs.length]);
     }
-    playAudio(isPlaying, audioRef);
+    if (isPlaying) {
+      audioRef.current.play();
+    }
   };
   const getTime = (t) => {
     return Math.floor(t / 60) + ":" + ("0" + Math.floor(t % 60)).slice(-2);
